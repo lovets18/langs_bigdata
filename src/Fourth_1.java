@@ -1,72 +1,77 @@
-import java.util.Scanner;
+import java.math.BigInteger;
+import java.util.*;
 
-class Exhibition {
-    boolean isOpen = false;
+class Polynomial {
+    HashMap<Integer, Integer> coefficients;
 
-    public void close(){
-        this.isOpen = false;
+    public Polynomial(HashMap<Integer, Integer> coefficients) {
+        this.coefficients = coefficients;
     }
 
-    public void open(){
-        this.isOpen = true;
+    public Polynomial add(Polynomial other) {
+        int maxDegree = Math.max(getMaxDegree(this), getMaxDegree(other));
+        HashMap<Integer, Integer> result = new HashMap<>();
+//        Polynomial result = new Polynomial();
+        for (int degree = 0; degree <= maxDegree; ++degree) {
+            Integer sum = coefficients.get(degree) + other.coefficients.get(degree);
+            result.put(degree, sum);
+        }
+        return new Polynomial(result);
     }
 
-    class Art {
-        String name;
-        String author;
-        int year;
+    private static int getMaxDegree(Polynomial polynomial) {
+        int maxDegree = 0;
+        for (HashMap.Entry<Integer, Integer> entry : polynomial.coefficients.entrySet()) {
+            maxDegree = Math.max(maxDegree, entry.getKey());
+        }
+        return maxDegree;
+    }
 
-        public Art(String name, String author, int year) {
-            this.name = name;
-            this.author = author;
-            this.year = year;
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("(");
+        boolean firstTermAdded = false;
+
+        for (HashMap.Entry<Integer, Integer> term : coefficients.entrySet()) {
+            if (term.getValue() != 0 || firstTermAdded) {
+                if (firstTermAdded) {
+                    sb.append("+ (");
+                }
+                firstTermAdded = true;
+
+                if (term.getValue() != 0) {
+                    sb.append(term.getValue()).append("x^").append(term.getKey()).append(") ");
+                } else {
+                    sb.append((Object) 0).append("x) ");
+                }
+            }
         }
 
-        @Override
-        public String toString() {
-            return name + ", written by " + author +" in " + year + ", available = " + isOpen;
-        }
+        return sb.toString();
     }
+
 }
 
 public class Fourth_1 {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        HashMap<Integer, Integer> a = new HashMap<>();
+        a.put(0, 0);
+        a.put(1, -10);
+        a.put(2, 10);
+        a.put(3, 15);
+        Polynomial first = new Polynomial(a);
 
-        Exhibition expo = new Exhibition();
+        HashMap<Integer, Integer> b = new HashMap<>();
+        b.put(0, 1);
+        b.put(1, 2);
+        b.put(2, -3);
+        b.put(3, 4);
+        Polynomial second = new Polynomial(b);
 
-        System.out.println("Введите информацию картине 1:");
-        System.out.print("\tname: ");
-        String name = scanner.nextLine();
-        System.out.print("\tauthor: ");
-        String author = scanner.nextLine();
-        System.out.print("\tyear: ");
-        int year = scanner.nextInt();
-        scanner.nextLine();
+        Polynomial sum = first.add(second);
 
-        Exhibition.Art art1 = expo.new Art(name, author, year);
-
-
-        System.out.println("Введите информацию картине 2:");
-        System.out.print("\tname: ");
-        name = scanner.nextLine();
-        System.out.print("\tauthor: ");
-        author = scanner.nextLine();
-        System.out.print("\tyear: ");
-        year = scanner.nextInt();
-        scanner.nextLine();
-
-        Exhibition.Art art2 = expo.new Art(name, author, year);
-
-        System.out.println("До открытия:");
-        System.out.println(art1);
-        System.out.println(art2);
-
-        expo.open();
-
-        System.out.println("\nОткрытие!");
-        System.out.println(art1);
-        System.out.println(art2);
-
+        System.out.println(first);
+        System.out.println(second);
+        System.out.println(sum);
     }
 }
