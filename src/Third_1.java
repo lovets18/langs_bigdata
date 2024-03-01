@@ -1,33 +1,34 @@
-import java.util.HashSet;
-import java.util.Set;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Third_1 {
-    public static void main(String[] args) {
-        Set<Integer> numbers = new HashSet<>();
-        // Добавьте произвольные числа в множество
-        numbers.add(1);
-        numbers.add(2);
-        numbers.add(3);
-        numbers.add(4);
-        numbers.add(5);
+    public static String replaceLetterAfterR(String text) {
+        Pattern pattern = Pattern.compile("pa", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(text);
 
-        while (numbers.size() > 1) {
-            Set<Integer> newNumbers = new HashSet<>();
-            Integer prev = null;
-            for (Integer num : numbers) {
-                if (prev == null) {
-                    prev = num;
-                } else {
-                    newNumbers.add(prev + num);
-                    prev = null;
-                }
-            }
-            if (prev != null) {
-                newNumbers.add(prev);
-            }
-            numbers = newNumbers;
+        StringBuffer correctedText = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(correctedText, "po");
         }
+        matcher.appendTail(correctedText);
 
-        System.out.println("Результат попарного суммирования: " + numbers.iterator().next());
+        return correctedText.toString();
     }
+
+    public static void main(String[] args) {
+        String text = "partenship asap after apartment past";
+//        String text = "Partenship ASAP after apArtment PAst";
+//        String text = "Пример текста с ошибками: Раз РАз РА арАбота каР А";
+
+        String correctedText = replaceLetterAfterR(text);
+
+        System.out.print("Исходный текст:\t\t");
+        System.out.println(text);
+        System.out.print("Исправленный текст:\t");
+        System.out.println(correctedText);
+    }
+
 }
+
+
