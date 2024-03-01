@@ -1,152 +1,72 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
-class Matrix {
-    int[][] mat;
-    int n;
+class Exhibition {
+    boolean isOpen = false;
 
-
-    public Matrix(int n) {
-        this.n = n;
-        mat = new int[n][n];
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n ; j++) {
-                mat[i][j] = (int) (Math.random() * 10);
-            }
+    public void close(){
+        this.isOpen = false;
     }
 
-    public Matrix(int n, int val) {
-        this.n = n;
-        mat = new int[n][n];
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n ; j++) {
-                mat[i][j] = val;
-            }
+    public void open(){
+        this.isOpen = true;
     }
 
-    public Matrix(int[][] arr) {
-        this.n = arr.length;
-        mat = new int[this.n][this.n];
-        for (int i = 0; i < n; i++)
-            System.arraycopy(arr[i], 0, mat[i], 0, n);
-    }
+    class Art {
+        String name;
+        String author;
+        int year;
 
-    public Matrix add(Matrix other) {
-        int[][] summa = new int[this.n][this.n];
-
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++) {
-                summa[i][j] = this.mat[i][j] + other.mat[i][j];
-            }
-        return new Matrix(summa);
-    }
-
-    public Matrix sub(Matrix other) {
-        int[][] sub = new int[this.n][this.n];
-
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++) {
-                sub[i][j] = this.mat[i][j] - other.mat[i][j];
-            }
-        return new Matrix(sub);
-    }
-
-    public Matrix mul(Matrix other) {
-        int[][] mul = new int[this.n][this.n];
-
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++) {
-                int line_sum = 0;
-                for (int k = 0; k < n; k++){
-                    line_sum += this.mat[i][k] * other.mat[k][j];
-                }
-                mul[i][j] = line_sum;
-            }
-        return new Matrix(mul);
-    }
-
-    public int l1() {
-        int max = -99999999;
-        for (int i = 0; i < n; i++) {
-            int cur_sum = 0;
-            for (int j = 0; j < n; j++) {
-                cur_sum += mat[i][j];
-            }
-            if (cur_sum > max)
-                max = cur_sum;
+        public Art(String name, String author, int year) {
+            this.name = name;
+            this.author = author;
+            this.year = year;
         }
-        return max;
-    }
 
-    public int l2() {
-        int max = -99999999;
-        for (int j = 0; j < n; j++) {
-            int cur_sum = 0;
-            for (int i = 0; i < n; i++) {
-                cur_sum += mat[i][j];
-            }
-            if (cur_sum > max)
-                max = cur_sum;
+        @Override
+        public String toString() {
+            return name + ", written by " + author +" in " + year + ", available = " + isOpen;
         }
-        return max;
-    }
-
-    public void printMat() {
-        for (int i = 0; i < this.n; i++)
-            System.out.println(Arrays.toString(this.mat[i]));
-        System.out.println();
     }
 }
 
 public class Fourth_1 {
     public static void main(String[] args) {
-
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Введите n: ");
-        int n = scanner.nextInt();
 
-        System.out.print("Введите m: ");
-        int m = scanner.nextInt();
+        Exhibition expo = new Exhibition();
 
+        System.out.println("Введите информацию картине 1:");
+        System.out.print("\tname: ");
+        String name = scanner.nextLine();
+        System.out.print("\tauthor: ");
+        String author = scanner.nextLine();
+        System.out.print("\tyear: ");
+        int year = scanner.nextInt();
         scanner.nextLine();
-        Matrix[] array = new Matrix[m];
 
-        int l1_min = 999999999;
-        int l2_min = 999999999;
-        int l1_id = -1, l2_id = -1;
+        Exhibition.Art art1 = expo.new Art(name, author, year);
 
-        for (int i = 0; i < m; i++) {
-            array[i] = new Matrix(n);
 
-            int l1 = array[i].l1();
-            if (l1 < l1_min) {
-                l1_min = l1;
-                l1_id = i;
-            }
+        System.out.println("Введите информацию картине 2:");
+        System.out.print("\tname: ");
+        name = scanner.nextLine();
+        System.out.print("\tauthor: ");
+        author = scanner.nextLine();
+        System.out.print("\tyear: ");
+        year = scanner.nextInt();
+        scanner.nextLine();
 
-            int l2 = array[i].l2();
-            if (l2 < l2_min) {
-                l2_min = l2;
-                l2_id = i;
-            }
+        Exhibition.Art art2 = expo.new Art(name, author, year);
 
-            System.out.println("Matrix " + (i + 1));
-            array[i].printMat();
-        }
+        System.out.println("До открытия:");
+        System.out.println(art1);
+        System.out.println(art2);
 
-        System.out.println("Min l1: " + l1_min + ". It has matrix number " + (l1_id + 1));
-        System.out.println("Min l1: " + l2_min + ". It has matrix number " + (l2_id + 1));
+        expo.open();
 
-        Matrix add = array[0].add(array[1]);
-        System.out.println("Matrix 1 add 2");
-        add.printMat();
-        Matrix sub = array[0].sub(array[2]);
-        System.out.println("Matrix 1 substract 3:");
-        sub.printMat();
-        Matrix mul = array[1].mul(array[2]);
-        System.out.println("Matrix 2 mul 3: ");
-        mul.printMat();
-
+        System.out.println("\nОткрытие!");
+        System.out.println(art1);
+        System.out.println(art2);
 
     }
 }
