@@ -1,124 +1,55 @@
-// Класс Абитуриент
-class Applicant {
-    String name;
-    double mark;
-    boolean admitted;
-
-    Faculty faculty;
-
-    public Applicant(String name, Faculty faculty) {
-        this.name = name;
-        this.mark = 0.0;
-        this.admitted = false;
-        this.faculty = faculty;
-    }
-
-    public void setMark(double averageGrade) {
-        this.mark = averageGrade;
-    }
-
-    public void setAdmitted(boolean admitted) {
-        this.admitted = admitted;
-    }
-}
-
-// Класс Преподаватель
-class Teacher {
-    public void giveGrade(Applicant applicant, double mark) {
-        applicant.setMark(mark);
-    }
-}
-
-// Класс Факультет
-class Faculty {
-
-    String name;
-
-    public Faculty(String name) {
-        this.name = name;
-    }
-
-    public double getAverage(Applicant[] applicants) {
-        double result = 0;
-        int n = 0;
-        for (Applicant applicant : applicants) {
-            if (applicant.faculty.name == this.name) {
-                result += applicant.mark;
-                n++;
-            }
-        }
-        return (result / n);
-    }
-
-    public void admitApplicants(Applicant[] applicants) {
-        double avg = getAverage(applicants);
-        for (Applicant applicant : applicants) {
-            if (applicant.faculty.name == this.name & applicant.mark >=avg) {
-                applicant.setAdmitted(true);
-            }
-        }
-    }
-}
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Fourth_4 {
     public static void main(String[] args) {
-        Faculty faculty = new Faculty("Информатика");
-        Faculty faculty_2 = new Faculty("Лингвистика");
-        Applicant applicant1 = new Applicant("Иванов", faculty);
-        Applicant applicant2 = new Applicant("Петров", faculty);
-        Applicant applicant3 = new Applicant("Смирнов", faculty);
-        Applicant applicant4 = new Applicant("Сидоров", faculty_2);
-        Applicant applicant5 = new Applicant("Борисов", faculty_2);
-        Applicant applicant6 = new Applicant("Звягинцев", faculty);
+        Scanner scanner = new Scanner(System.in);
 
-        Teacher teacher = new Teacher();
-        teacher.giveGrade(applicant1, 8.5);
-        teacher.giveGrade(applicant2, 6.0);
-        teacher.giveGrade(applicant3, 7.0);
-        teacher.giveGrade(applicant4, 9.0);
-        teacher.giveGrade(applicant5, 5.0);
-        teacher.giveGrade(applicant6, 7.5);
+        System.out.println("Введите путь к файлу с фамилиями студентов и их оценками:");
+        String inputFilePath = scanner.nextLine();
 
-        Applicant[] applicants = {
-                applicant1,
-                applicant2,
-                applicant3,
-                applicant4,
-                applicant5,
-                applicant6
-        };
+        File inputFile = new File(inputFilePath);
 
-        double avg1 = faculty.getAverage(applicants);
-        double avg2 = faculty_2.getAverage(applicants);
-
-
-        faculty.admitApplicants(applicants);
-        faculty_2.admitApplicants(applicants);
-
-        System.out.println(
-                "Проходной балл на факультет " + faculty.name
-                + ": " + avg1
-        );
-
-        System.out.println(
-                "Проходной балл на факультет " + faculty_2.name
-                        + ": " + avg2
-        );
-
-        for (Applicant applicant : applicants) {
-            if (applicant.admitted) {
-                System.out.println(
-                        applicant.name + ": зачислен на факультет "
-                        + applicant.faculty.name + " | балл: "
-                        + applicant.mark
-                );
-            } else {
-                System.out.println(
-                        applicant.name + ": не зачислен на факультет "
-                                + applicant.faculty.name + " | балл: "
-                                + applicant.mark
-                );
-            }
+        if (!inputFile.exists() || !inputFile.isFile()) {
+            System.err.println("Указанный файл не существует или не является файлом.");
+            return;
         }
+
+        List<String> studentsAboveSeven = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\s+");
+                String name = parts[0];
+                double averageGrade = Double.parseDouble(parts[1]);
+
+                if (averageGrade > 7) {
+                    studentsAboveSeven.add(name.toUpperCase());
+                }
+            }
+
+            String outputDirectoryPath = "output_directory";
+            File outputDirectory = new File(outputDirectoryPath);
+            outputDirectory.mkdir();
+
+            String outputFilePath = outputDirectoryPath + "/students_above_seven.txt";
+            File outputFile = new File(outputFilePath);
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+                for (String student : studentsAboveSeven) {
+                    writer.write(student + "\n");
+                }
+                System.out.println("Фамилии студентов с оценкой более 7 сохранены в файл: " + outputFilePath);
+            } catch (IOException e) {
+                System.err.println("Ошибка при записи в файл: " + e.getMessage());
+            }
+        } catch (IOException | NumberFormatException e) {
+            System.err.println("Ошибка при чтении файла: " + e.getMessage());
+        }
+
+        scanner.close();
     }
 }
