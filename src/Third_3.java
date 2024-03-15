@@ -59,3 +59,5 @@ public class third_3 {
         scanner.close();
     }
 }
+
+// 3_3.txt
