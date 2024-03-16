@@ -1,17 +1,7 @@
-# langs_bigdata
+# ЛР10
 
 Номер по списку: 13
 
-Исходный код в папке `src`. 
+Исходный код в папке `project/`. 
 
-
-`Third_3.java` - Вариант 3, задание 3
-`Fourth_3.java` - Вариант 3, задание 4
-`Third_4.java` - Вариант 4, задание 3
-`Fourth_4.java` - Вариант 4, задание 4
-
-
-<!-- `Third_1.java` - Вариант 1, задание 3
-`Fourth_1.java` - Вариант 1, задание 4
-`Third_2.java` - Вариант 2, задание 3
-`Fourth_2.java` - Вариант 2, задание 4 -->
+`src/atomic/engineering/SparkDemo.scala` - Код программы
